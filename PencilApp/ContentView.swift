@@ -73,6 +73,8 @@ struct Canvas: UIViewRepresentable {
    @Binding var type : PKInkingTool.InkType
    @Binding var isDrawing: Bool
    
+   @State private var toolPicker = PKToolPicker()
+   
    /** here we declare de binding variables, THIS WAS WE DO NOT NEED TO CALL OUR STRUCT LIKE Canvas(canvas: $canvas, color: $color) BUT AS Canvas($canvas, $color) this will work for anything like view Models, functions, etc*/
    init(_ canvas: Binding<PKCanvasView>, _ color: Binding<Color>, _ type: Binding<PKInkingTool.InkType>, _ isDrawing: Binding<Bool>){
      _canvas = canvas
@@ -95,7 +97,8 @@ struct Canvas: UIViewRepresentable {
       canvas.drawingPolicy = .anyInput
       /** to change the type of tool or pencil we need to pass it to our canvas*/
       canvas.tool = isDrawing ? pencil : eraser
-   
+      /** we call the function that will render the native tool picker*/
+      showToolPicker()
       return canvas
    }
    
@@ -103,4 +106,15 @@ struct Canvas: UIViewRepresentable {
    func updateUIView(_ uiView: UIViewType, context: Context) {
       uiView.tool = isDrawing ? pencil : eraser
    }
+}
+
+extension Canvas{
+   
+   /** we will add an extension function that will popup the native tool picker from PencilKit*/
+   func showToolPicker(){
+      toolPicker.setVisible(true, forFirstResponder: canvas)
+      toolPicker.addObserver(canvas)
+      canvas.becomeFirstResponder()
+   }
+   
 }
