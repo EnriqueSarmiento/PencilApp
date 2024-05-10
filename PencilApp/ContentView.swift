@@ -16,6 +16,11 @@ struct ContentView: View {
    @State private var type : PKInkingTool.InkType = .pencil
    @State private var isDrawing: Bool = true
    
+   func saveImage(){
+      let image = canvas.drawing.image(from: canvas.drawing.bounds, scale: 1)
+      UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+   }
+   
     var body: some View {
        NavigationView{
 //          Canvas(canvas: $canvas, color: $color, type: $type)
@@ -42,6 +47,10 @@ struct ContentView: View {
                    ButtonView(action: {
                       canvas.drawing = PKDrawing()
                    }, icon: "trash")
+                   
+                   ButtonView(action: {
+                     saveImage()
+                   }, icon: "square.and.arrow.down.fill" )
                 }
              }
              
